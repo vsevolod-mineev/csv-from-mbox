@@ -1,13 +1,25 @@
-
+#usr/bin/python3.9
 import re
 import csv
+import mailbox
+from pathlib import Path
 
 class csv_from_mbox(object):
 
     def __init__(self):
         print("\nWelcome to csv from mbox!")
 
-    def get_email_from_mbox(self):
+    def get_from_header(self,path_to_mbox):
+        mbox_path=Path(path_to_mbox)
+        file_to_store_fields_path='./output/mail_addresses_from_mbox.txt'
+        mbox = mailbox.mbox(mbox_path)
+        file=open(file_to_store_fields_path,'a')
+        for message in mbox:
+            # Print the senders for check
+            file.write(str(message['from'])+'\n')
+
+    def get_email_from_mbox(self,path_to_mbox):
+        self.get_from_header(path_to_mbox)
         #Oper the file with the From Field from the Mailbox
         file_in=open('output/mail_addresses_from_mbox.txt','r')
         #Read the file and store it in a string
@@ -34,12 +46,16 @@ class csv_from_mbox(object):
         return address_set
 
     def main(self):
-        address_set = self.get_email_from_mbox()
-        with open('./output/emails', 'w') as f:
+        path_to_mbox = input("\nPaste the path to the mbox file:\n")
+        address_set = self.get_email_from_mbox(path_to_mbox)
+        with open('./output/emails.csv', 'w') as f:
             write = csv.writer(f)
             for address in address_set:
                 write.writerow([address])
-    
-if __name__ == "__main__":
+
+def entrypoint():
     main = csv_from_mbox()
     main.main()
+
+if __name__ == "__main__":
+    entrypoint()
