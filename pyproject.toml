@@ -7,6 +7,9 @@ license = "MIT License"
 homepage = "https://github.com/vsevolod-mineev/csv-from-mbox"
 repository = "https://github.com/vsevolod-mineev/csv-from-mbox"
 documentation = "https://github.com/vsevolod-mineev/csv-from-mbox"
+packages = [
+    { include = "main.py" },
+]
 
 [tool.poetry.dependencies]
 python = "^3.9"
