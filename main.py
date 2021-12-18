@@ -1,35 +1,47 @@
-from optparse import OptionParser
-import os.path
+
 import re
 
-regex = re.compile(("([a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`"
-                    "{|}~-]+)*(@|\sat\s)(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?(\.|"
-                    "\sdot\s))+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)"))
+#Oper the file with the From Field from the Mailbox
+file_in=open('mail_addresses_from_mbox.txt','r')
 
-def file_to_str(filename):
-    """Returns the contents of filename as a string."""
-    with open(filename) as f:
-        return f.read().lower() # Case is lowered to prevent regex mismatches.
+#Read the file and store it in a string
+addresses_lines=file_in.read()
 
-def get_emails(s):
-    """Returns an iterator of matched emails found in string s."""
-    # Removing lines that start with '//' because the regular expression
-    # mistakenly matches patterns like 'http://foo@bar.com' as '//foo@bar.com'.
-    return (email[0] for email in re.findall(regex, s) if not email[0].startswith('//'))
+# Find all the email addresses inside and store it into a list
+address_list=re.findall('\S+@\S+',addresses_lines)
 
-if __name__ == '__main__':
-    parser = OptionParser(usage="Usage: python %prog [FILE]...")
-    # No options added yet. Add them here if you ever need them.
-    options, args = parser.parse_args()
+# Create a set for avoid duplicates
+address_set=set()
 
-    if not args:
-        parser.print_usage()
-        exit(1)
+# For every email address
+for address_elem in address_list:
+    # Remove no-reply addresses
+    if "noreply" in address_elem:
+        continue
+    if "no-reply" in address_elem:
+        continue
+    if "do_not_reply" in address_elem:
+        continue
+    if "do-not-reply" in address_elem:
+        continue
+    # Remove the angular parenthesis
+    address_elem=address_elem[1:-1]
+    # Add the address to the set
+    address_set.add(address_elem)
 
-    for arg in args:
-        if os.path.isfile(arg):
-            for email in get_emails(file_to_str(arg)):
-                print(email)
-        else:
-            print('"{}" is not a file.'.format(arg))
-            parser.print_usage()
+# IF YOU WANT TO STORE ALL THE ADDRESSES IN COLUMN UNCOMMENT THIS PART
+# clean_addresses=open('final_addresses.txt','a')
+
+# for elem in address_set:
+#     clean_addresses.write(elem+'\n')
+
+# clean_addresses.close()
+
+# Open a file in the .vcf standard
+v_card=open('contacts.vcf','a')
+
+# Store every address in a vCard Standard file with all the addresses
+for address in address_set:
+    v_card.write("BEGIN:VCARD\nVERSION:3.0\nN:;;;;\nFN:\nEMAIL;TYPE=INTERNET;TYPE=WORK:"+address+"\n"+"END:VCARD\n") 
+
+v_card.close()
