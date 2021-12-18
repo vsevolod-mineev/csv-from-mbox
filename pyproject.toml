@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "csv-from-mbox"
+version = "0.1.0"
+description = "Python script for extracting all email addresses you received mail from in a .csv formatt from a .mbox file."
+authors = ["Vsevolod Mineev <vsevolod.mineev@gmail.com>"]
+license = "MIT License"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+[tool.poetry.dev-dependencies]
+
+[tool.poetry.scripts]
+csv-from-mbox = "main:entrypoint"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
