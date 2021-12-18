@@ -15,7 +15,6 @@ class csv_from_mbox(object):
         from_str = str()
         for message in mbox:
             from_str = from_str + str(message['from'])+ '\n'
-        print(from_str[0:1000])
         return from_str
 
     def get_emails_from_mbox(self, from_fields):
