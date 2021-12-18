@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "csv-from-mbox"
-version = "0.1.0"
-description = "Python script for extracting all email addresses you received mail from in a .csv formatt from a .mbox file."
+version = "0.2.0"
+description = "Python script for extracting emails contained in the 'from' field of your mailbox from an .mbox file."
 authors = ["Vsevolod Mineev <vsevolod.mineev@gmail.com>"]
 license = "MIT License"
 homepage = "https://github.com/vsevolod-mineev/csv-from-mbox"
