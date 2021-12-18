@@ -1,8 +1,9 @@
 
 import re
+import csv
 
 #Oper the file with the From Field from the Mailbox
-file_in=open('mail_addresses_from_mbox.txt','r')
+file_in=open('output/mail_addresses_from_mbox.txt','r')
 
 #Read the file and store it in a string
 addresses_lines=file_in.read()
@@ -38,10 +39,16 @@ for address_elem in address_list:
 # clean_addresses.close()
 
 # Open a file in the .vcf standard
-v_card=open('contacts.vcf','a')
+
+
+#v_card=open('contacts.vcf','a')
 
 # Store every address in a vCard Standard file with all the addresses
-for address in address_set:
-    v_card.write("BEGIN:VCARD\nVERSION:3.0\nN:;;;;\nFN:\nEMAIL;TYPE=INTERNET;TYPE=WORK:"+address+"\n"+"END:VCARD\n") 
-
-v_card.close()
+#for address in address_set:
+#    v_card.write("BEGIN:VCARD\nVERSION:3.0\nN:;;;;\nFN:\nEMAIL;TYPE=INTERNET;TYPE=WORK:"+address+"\n"+"END:VCARD\n") 
+#v_card.close()
+with open('./output/emails', 'w') as f:
+    write = csv.writer(f)
+    for address in address_set:
+        write.writerow([address])
+    
