@@ -134,3 +134,5 @@ mail_addresses_from_mbox.txt
 output/emails
 
 output/emails.csv
+
+*.csv

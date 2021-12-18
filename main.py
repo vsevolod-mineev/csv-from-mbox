@@ -14,7 +14,7 @@ class csv_from_mbox(object):
         mbox = mailbox.mbox(self.input_path)
         from_str = str()
         for message in mbox:
-            from_str = from_str + str(message['from'])+ '\n'
+            from_str = from_str + str(message['from']) + '\n'
         return from_str
 
     def get_emails_from_mbox(self, from_fields):
@@ -35,7 +35,8 @@ class csv_from_mbox(object):
 
     def save_as_csv(self, emails):
         with open(self.output_path, 'w') as f:
-            write = csv.writer(f)
+            write = csv.writer(f,delimiter=',')
+            write.writerow(['email'])
             for email in emails:
                 write.writerow([email])
 
@@ -44,7 +45,7 @@ def main():
     input_path = input("\nPaste the path to the mbox file:\n")
     output_path = input("\nOutput directory for extracted emails:\n")
     cfm = csv_from_mbox(input_path, output_path)
-    print("\nLoading the 'from' fields of your emails from mbox.\n")
+    print("\nLoading the 'from' fields of your emails from mbox...\n")
     from_fields = cfm.get_from_headers()
     print("\nSaving email addresses into csv.\n")
     emails = cfm.get_emails_from_mbox(from_fields)
