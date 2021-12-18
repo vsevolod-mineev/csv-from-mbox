@@ -6,9 +6,9 @@ from pathlib import Path
 
 class csv_from_mbox(object):
 
-    def __init__(self,input_path,output_path="./output/emails.csv"):
+    def __init__(self, input_path, output_path = "./output/emails.csv" ):
         self.input_path = Path(input_path)
-        self.output_path = output_path
+        self.output_path = Path(output_path)
 
     def get_from_headers(self):
         mbox = mailbox.mbox(self.input_path)
@@ -18,7 +18,7 @@ class csv_from_mbox(object):
         print(from_str[0:1000])
         return from_str
 
-    def get_emails_from_mbox(self,from_fields):
+    def get_emails_from_mbox(self, from_fields):
         address_list=re.findall('\S+@\S+',from_fields)
         email_set=set()
         for address_elem in address_list:
@@ -43,10 +43,14 @@ class csv_from_mbox(object):
 def main():
     print("\nWelcome to csv from mbox!")
     input_path = input("\nPaste the path to the mbox file:\n")
-    cfm = csv_from_mbox(input_path)
+    output_path = input("\nOutput directory for extracted emails:\n")
+    cfm = csv_from_mbox(input_path, output_path)
+    print("\nLoading the 'from' fields of your emails from mbox.\n")
     from_fields = cfm.get_from_headers()
+    print("\nSaving email addresses into csv.\n")
     emails = cfm.get_emails_from_mbox(from_fields)
     cfm.save_as_csv(emails)
+    print("\nThank you!\n")
 
 if __name__ == "__main__":
     main()
