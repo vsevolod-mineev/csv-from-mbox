@@ -14,11 +14,11 @@ To execute the script enter:
 ```
 csv-from-mbox
 ```
-You'll be prompted to specify the `input path`, for example you could paste:
+You'll be prompted to specify the `input path`, for example to use an .mbox file in your current directory named mail.mbox, you would paste:
 ```
-./input/mail.mbox
+./mail.mbox
 ```
-You'll then be prompted to specify the `output path`, for example you could paste:
+You'll be prompted to specify the `output path`, for example to output the .csv file into your current directory and name it emails.csv, you would paste:
 ```
-./output/emails.csv
+./emails.csv
 ```

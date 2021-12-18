@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "csv-from-mbox"
-version = "0.2.0"
+version = "0.3.0"
 description = "Python script for extracting emails contained in the 'from' field of your mailbox from an .mbox file."
 authors = ["Vsevolod Mineev <vsevolod.mineev@gmail.com>"]
 license = "MIT License"
