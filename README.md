@@ -22,3 +22,4 @@ You'll be prompted to specify the `output path`, for example to output the .csv 
 ```
 ./emails.csv
 ```
+Thank you and have fun!
