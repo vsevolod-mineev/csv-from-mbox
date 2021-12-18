@@ -16,3 +16,11 @@ To execute the script enter:
 ```
 csv-from-mbox
 ```
+You'll be prompted to specify the `input path`, for example you could paste:
+```
+./input/mail.mbox
+```
+You'll then be prompted to specify the `output path`, for example you could paste:
+```
+./output/emails.csv
+```
