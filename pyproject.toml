@@ -14,7 +14,7 @@ python = "^3.9"
 [tool.poetry.dev-dependencies]
 
 [tool.poetry.scripts]
-csv-from-mbox = "main:entrypoint"
+csv-from-mbox = "main:main"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
