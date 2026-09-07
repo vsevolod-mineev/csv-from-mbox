@@ -1,5 +1,9 @@
 # csv-from-mbox
 
+[![PyPI](https://img.shields.io/pypi/v/csv-from-mbox?cacheSeconds=1800)](https://pypi.org/project/csv-from-mbox/)
+[![CI](https://github.com/vsevolod-mineev/csv-from-mbox/actions/workflows/ci.yml/badge.svg)](https://github.com/vsevolod-mineev/csv-from-mbox/actions/workflows/ci.yml)
+[![Python versions](https://img.shields.io/pypi/pyversions/csv-from-mbox?cacheSeconds=1800)](https://pypi.org/project/csv-from-mbox/)
+
 Turn an `.mbox` export into a CSV you can actually open in a spreadsheet.
 
 You know the drill: Google Takeout hands you a two-gigabyte `All mail Including Spam and Trash.mbox`, and every tool that can open it wants to be an email client about it. This one does not. One Python file, standard library only, two modes, done.
