@@ -5,7 +5,9 @@
 
 from __future__ import annotations
 
+import contextlib
 import csv
+import io
 import mailbox
 import sys
 import tempfile
@@ -125,6 +127,27 @@ class CsvFromMboxTests(unittest.TestCase):
         target.mkdir()
         cfm.main([str(self.mbox), "-o", str(target)])
         self.assertTrue((target / "messages.csv").is_file())
+
+    def run_main_stdout(self, *extra: str) -> "tuple[str, str]":
+        out, err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            cfm.main([str(self.mbox), "-o", "-", *extra])
+        return out.getvalue(), err.getvalue()
+
+    def test_stdout_mode_streams_clean_csv(self):
+        out, err = self.run_main_stdout()
+        rows = list(csv.DictReader(io.StringIO(out)))
+        self.assertEqual(len(rows), 5)
+        self.assertEqual(rows[0]["from_email"], "Ash@pallet.town")
+        self.assertNotIn("Wrote", out, "chatter must not pollute piped CSV")
+        self.assertIn("Wrote 5 messages to stdout", err)
+        self.assertNotIn("\r\n", out, "stdout stream should be newline-terminated")
+
+    def test_stdout_mode_addresses(self):
+        out, _ = self.run_main_stdout("--addresses")
+        rows = list(csv.DictReader(io.StringIO(out)))
+        self.assertEqual([row["email"] for row in rows],
+                         ["ash@pallet.town", "bare@example.com", "bjorn@example.se"])
 
     def test_missing_mbox_fails_loudly_instead_of_creating_one(self):
         missing = self.tmp / "nope.mbox"

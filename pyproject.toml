@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "csv-from-mbox"
-version = "0.5.0"
+version = "0.5.1"
 description = "Turn an .mbox export into a CSV: one row per message, or just the unique sender addresses. Standard library only."
 authors = ["Vsevolod Mineev <vsevolod.mineev@gmail.com>"]
 license = "MIT License"

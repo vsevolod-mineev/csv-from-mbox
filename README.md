@@ -44,7 +44,14 @@ csv-from-mbox mail.mbox                # messages.csv with everything
 csv-from-mbox mail.mbox --no-body      # metadata only, much smaller file
 csv-from-mbox mail.mbox --addresses    # emails.csv with unique senders
 csv-from-mbox mail.mbox -o ~/Desktop   # choose where it goes
+csv-from-mbox mail.mbox -o - | head    # stream CSV to stdout, chatter on stderr
 csv-from-mbox                          # no arguments? it will ask nicely
+```
+
+Being a well-behaved unix citizen, `-o -` pipes straight into `xsv`, `duckdb`, `grep` and friends:
+
+```sh
+csv-from-mbox mail.mbox -o - | duckdb -c "SELECT from_email, count(*) FROM read_csv('/dev/stdin') GROUP BY 1 ORDER BY 2 DESC LIMIT 10"
 ```
 
 ## Test

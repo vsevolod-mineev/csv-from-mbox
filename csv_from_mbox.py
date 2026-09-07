@@ -25,7 +25,7 @@ from email.utils import getaddresses, parsedate_to_datetime
 from pathlib import Path
 from typing import Iterable, Iterator, Optional
 
-__version__ = "0.5.0"
+__version__ = "0.5.1"
 
 NOREPLY_MARKERS = ("noreply", "no-reply", "do_not_reply", "do-not-reply", "donotreply")
 
@@ -148,15 +148,23 @@ def resolve_output(raw: Optional[str], default_name: str) -> Path:
     return path
 
 
-def write_csv(path: Path, header: "list[str]", rows: Iterable[Iterable[str]]) -> int:
+def _write(handle, header: "list[str]", rows: Iterable[Iterable[str]], lineterminator: str) -> int:
+    writer = csv.writer(handle, lineterminator=lineterminator)
+    writer.writerow(header)
     count = 0
-    with open(path, "w", newline="", encoding="utf-8") as handle:
-        writer = csv.writer(handle)
-        writer.writerow(header)
-        for row in rows:
-            writer.writerow(row)
-            count += 1
+    for row in rows:
+        writer.writerow(row)
+        count += 1
     return count
+
+
+def write_csv(path: "Optional[Path]", header: "list[str]", rows: Iterable[Iterable[str]]) -> int:
+    """Write rows to a file, or to stdout when path is None (newline-terminated
+    for pipe friendliness; files keep the CSV-standard CRLF)."""
+    if path is None:
+        return _write(sys.stdout, header, rows, "\n")
+    with open(path, "w", newline="", encoding="utf-8") as handle:
+        return _write(handle, header, rows, "\r\n")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -166,7 +174,8 @@ def build_parser() -> argparse.ArgumentParser:
                     "into a CSV of messages, or just the sender addresses.",
     )
     parser.add_argument("mbox", nargs="?", help=".mbox file to read (omit to be prompted)")
-    parser.add_argument("-o", "--output", help="output CSV file, or a directory to put it in")
+    parser.add_argument("-o", "--output",
+                        help="output CSV file, a directory to put it in, or - for stdout")
     parser.add_argument("--addresses", action="store_true",
                         help="classic mode: unique sender addresses only")
     parser.add_argument("--no-body", action="store_true",
@@ -185,21 +194,24 @@ def main(argv: "Optional[list[str]]" = None) -> None:
     if interactive:
         if not sys.stdin.isatty():
             parser.error("no mbox file given")
-        print("\nWelcome to csv from mbox!")
-        args.mbox = input("\nPath to the .mbox file:\n").strip()
-        args.output = input(
-            "\nWhere to save the CSV (blank for the current directory):\n"
-        ).strip() or None
+        # prompts go to stderr so even an interactive run can pipe stdout
+        print("\nWelcome to csv from mbox!", file=sys.stderr)
+        print("\nPath to the .mbox file:", file=sys.stderr)
+        args.mbox = input().strip()
+        print("\nWhere to save the CSV (blank for the current directory, - for stdout):",
+              file=sys.stderr)
+        args.output = input().strip() or None
 
+    to_stdout = args.output == "-"
     box = open_mbox(Path(args.mbox).expanduser())
     try:
         if args.addresses:
-            output = resolve_output(args.output, "emails.csv")
+            output = None if to_stdout else resolve_output(args.output, "emails.csv")
             senders = unique_senders(box, keep_automated=args.keep_noreply)
             count = write_csv(output, ["email"], ([sender] for sender in senders))
             noun = "address" if count == 1 else "addresses"
         else:
-            output = resolve_output(args.output, "messages.csv")
+            output = None if to_stdout else resolve_output(args.output, "messages.csv")
             columns = MESSAGE_COLUMNS[:-1] if args.no_body else MESSAGE_COLUMNS
             rows: Iterable["list[str]"] = message_rows(box)
             if args.no_body:
@@ -209,9 +221,10 @@ def main(argv: "Optional[list[str]]" = None) -> None:
     finally:
         box.close()
 
-    print(f"Wrote {count} {noun} to {output}")
+    chatter = sys.stderr if to_stdout else sys.stdout
+    print(f"Wrote {count} {noun} to {'stdout' if to_stdout else output}", file=chatter)
     if interactive:
-        print("\nThank you and happy sorting!\n")
+        print("\nThank you and happy sorting!\n", file=chatter)
 
 
 if __name__ == "__main__":
