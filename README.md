@@ -18,11 +18,17 @@ Bodies prefer `text/plain`, HTML-only emails get their tags stripped, attachment
 
 ## Install
 
-Run it straight from GitHub with [uv](https://docs.astral.sh/uv/) or [pipx](https://pipx.pypa.io/):
+From [PyPI](https://pypi.org/project/csv-from-mbox/):
 
 ```sh
-uvx --from git+https://github.com/vsevolod-mineev/csv-from-mbox csv-from-mbox mail.mbox
-pipx run --spec git+https://github.com/vsevolod-mineev/csv-from-mbox csv-from-mbox mail.mbox
+pip install csv-from-mbox
+```
+
+Or run it without installing anything, via [uv](https://docs.astral.sh/uv/) or [pipx](https://pipx.pypa.io/):
+
+```sh
+uvx csv-from-mbox mail.mbox
+pipx run csv-from-mbox mail.mbox
 ```
 
 Or clone it and run the file, there are no dependencies to install:
@@ -30,8 +36,6 @@ Or clone it and run the file, there are no dependencies to install:
 ```sh
 python3 csv_from_mbox.py mail.mbox
 ```
-
-`pip install csv-from-mbox` also exists, but PyPI currently carries the 2021-era 0.4.5; use the GitHub version until 0.5.0 lands there.
 
 ## Use
 
