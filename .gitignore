@@ -136,3 +136,6 @@ output/emails
 output/emails.csv
 
 *.csv
+
+# macOS
+.DS_Store

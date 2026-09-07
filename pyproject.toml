@@ -1,24 +1,23 @@
 [tool.poetry]
 name = "csv-from-mbox"
-version = "0.4.5"
-description = "Python script for extracting emails contained in the 'from' field of your mailbox from an .mbox file."
+version = "0.5.0"
+description = "Turn an .mbox export into a CSV: one row per message, or just the unique sender addresses. Standard library only."
 authors = ["Vsevolod Mineev <vsevolod.mineev@gmail.com>"]
 license = "MIT License"
 readme = "README.md"
 homepage = "https://github.com/vsevolod-mineev/csv-from-mbox"
 repository = "https://github.com/vsevolod-mineev/csv-from-mbox"
 documentation = "https://github.com/vsevolod-mineev/csv-from-mbox"
+keywords = ["mbox", "csv", "email", "export", "takeout"]
 packages = [
-    { include = "main.py" },
+    { include = "csv_from_mbox.py" },
 ]
 
 [tool.poetry.dependencies]
 python = "^3.9"
 
-[tool.poetry.dev-dependencies]
-
 [tool.poetry.scripts]
-csv-from-mbox = "main:main"
+csv-from-mbox = "csv_from_mbox:main"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
